@@ -1,0 +1,362 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[32]:
+
+
+import math
+# Airport Class 
+class Airport:
+    def __init__(self,name,phonenumber,locationA,locationL):
+        self.name = name
+        self.phonenumber = phonenumber
+        self.locationA = locationA
+        self.locationL = locationL
+        
+    #When the function is called from mainClass, main class will provide LocationX and LocationY from user or by creating list 
+    def compareDifference(self,LocationX,LocationY):
+        difference = math.sqrt((LocationY-self.locationL)*(LocationY-self.locationL)+(LocationX-self.locationA)*(LocationX-self.locationA))
+        return round(difference)
+   
+    def AvailableAirports(self):
+        print(self.phonenumber,"call on the number provided to make sure the airport is open")
+    def getname(self):
+        return self.name
+#Main class : return 3 closest airports  
+
+# list of airports 
+airports = []
+airports.append(Airport('RST',449389,43,92))  
+airports.append(Airport('MSP',12980934,45,96))
+airports.append(Airport('LSE',12980934,49,98))
+airports.append(Airport('slp',12980934,50,100))
+airports.append(Airport('plr',12980934,55,110))
+
+def main_airport_function():
+    userinputdestination = input(print("please enter the destination college you want to go"))
+    dictofcollegeandlocationX = {"luther college": 43, "st olaf": 44}
+    dictofcollegelocationY = {"luther college":-91, "st olaf": -93}
+
+    # This for loop will iterate through untill it finds the latitude for a input destination college
+
+    if  userinputdestination in dictofcollegeandlocationX:
+        locX =  dictofcollegeandlocationX[userinputdestination]
+
+    if  userinputdestination in dictofcollegelocationY:
+        locY = dictofcollegelocationY[userinputdestination]
+
+
+    #This loop will call the comparedifference function of airport and then store the difference in the list of diff 
+    diff = []
+    airportname = []
+
+    for i in range (len(airports)):
+        diff.append(airports[i].compareDifference(locX,locY))
+        airportname.append(airports[i].getname())
+
+    dictofdifferenceandAirport = {diff[i]:airportname[i]for i in range(len(diff))}    
+
+    #this function should sorted the list of the differnce 
+    
+    #complexity for the quick sort: O(nlog(n))
+    def quick_sort(arr):
+        quick_sort_help(arr, 0, len(arr) - 1)
+
+    def quick_sort_help(arr, first, last):
+        if first<last:
+            splitpoint = partition(arr, first, last)
+            quick_sort_help(arr, first, splitpoint-1)
+            quick_sort_help(arr, splitpoint+1, last )
+
+    def partition(arr, first, last):
+        pivotvalue = arr[first]
+        leftmark = first + 1
+        rightmark = last
+
+        done = False
+
+        while not done:
+            while leftmark <= rightmark and arr[leftmark] <= pivotvalue:
+                leftmark += 1
+            while arr[rightmark] >= pivotvalue and rightmark >= leftmark:
+                rightmark -= 1
+
+            if rightmark < leftmark:
+                done = True
+
+            else:
+                temp = arr[leftmark]
+                arr[leftmark] = arr[rightmark]
+                arr[rightmark] = temp
+
+        temp = arr[first]
+        arr[first] = arr[rightmark]
+        arr[rightmark] = temp
+
+        return rightmark
+    quick_sort(diff)
+
+    #bubbleSort(diff)
+    #print(diff)
+    #print(dictofdifferenceandAirport)
+    #for keys,values in dictofdifferenceandAirport.items():
+    #    print(keys)
+    #    print(values)
+
+    #complexity for closeAirsports: O(n^2)
+    def closeAirsports(diff): 
+        n = {}
+        for k,v in dictofdifferenceandAirport.items():
+            for i in diff:
+                if i == k:
+                    n[k]= v
+        return n
+    #print(closeAirsports(diff))        
+    Airport3 = []
+    i = 0
+
+    for airportname in dictofdifferenceandAirport:
+        closeAirport = dictofdifferenceandAirport[airportname]
+        Airport3.append(closeAirport)
+        i = i + 1
+
+    #print(Airport3)
+    #complexity for best3_airport: O(n)
+    def best3_airport():
+        best3Airports = []
+        for i in range(3):
+            best3Airports.append(Airport3[i])
+        return best3Airports
+    return best3_airport()
+
+
+
+print(main_airport_function())
+all_airports_list = []
+#complexity for all_airport: O(n)
+def all_airport():
+    for i in range(len(airports)):
+        all_airports_list.append(Airport.getname(airports[i]))
+    return all_airports_list
+
+all_airports_list = all_airport()
+
+best3Airports = main_airport_function()
+for i in range(len(all_airports_list)):
+    if all_airports_list[i] in best3Airports:
+        print(Airport.AvailableAirports(airports[i]))
+
+
+
+# In[33]:
+
+
+#flights class
+  
+# airport needs to have three lists which keep all the avaliable flights for the airport. e.g. MSP_flight = [01, 02, 03] this # are flight numbers
+
+# search flight       
+class flights():
+    def __init__(self, num, time, price, stops, airport):
+        self.num = num
+        self.time = time
+        self.price = price
+        self.stops = stops
+        self.airport = airport
+        
+    def get_time(self):
+        return self.time
+    def get_price(self):
+        return self.price
+    def get_stops(self):
+        return self.stops
+    def get_flight_num(self):
+        return self.num
+        
+    def get_airport(self):
+        return self.airport
+    
+    def flight_info(self):
+        return "flight number: ", self.num, "time: ", self.time, "price: ", self.price, "stops: ", self.stops, "airoport: ", self.airport
+
+
+best3airport = main_airport_function()
+generic_flight = []
+generic_flight.append(flights(11, 1300, 500, 1, "MSP"))
+generic_flight.append(flights(12, 1330, 400, 1, "MSP"))
+generic_flight.append(flights(13, 1500, 400, 2, "MSP"))
+generic_flight.append(flights(14, 1540, 200, 2, "RST"))
+generic_flight.append(flights(21, 1200, 450, 1, "RST"))
+generic_flight.append(flights(22, 1500, 500, 2, "RST"))
+generic_flight.append(flights(23, 1600, 550, 1, "LSE"))
+generic_flight.append(flights(24, 1600, 300, 1, "LSE"))
+generic_flight.append(flights(31, 1800, 350, 2, "LSE"))
+generic_flight.append(flights(32, 1500, 220, 1, "SLP"))
+generic_flight.append(flights(33, 1100, 334, 1, "SLP"))
+generic_flight.append(flights(34, 1000, 506, 2, "SLP"))   
+
+
+
+def main_flight_function():
+    #method2(shis gives us a list of all available flights)
+    #complexity for all_avai_flights: O(n)
+    def all_avai_flights():
+        avai_flight_list = []
+        for i in range(len(generic_flight)):
+            air = flights.get_airport(generic_flight[i])
+            if air in best3airport:
+                avai_flight_list.append(flights.get_flight_num(generic_flight[i]))
+        return avai_flight_list
+
+    #return a time list that for all the avai_flight_list
+    #sort the time list
+    #return a flight list based on the sorted time list
+    #complexity for all_avai_flights_time: O(n)
+    def all_avai_flights_time():
+        avai_flight_timelist = []
+        for i in range(len(all_avai_flights())):
+            avai_flight_timelist.append(flights.get_time(generic_flight[i]))
+        return avai_flight_timelist
+
+    flightlist = all_avai_flights()
+    timelist = all_avai_flights_time()
+
+    #Bubble sort - complexity O(n^2) Most inefficient way of sorting 
+    def bubble_sort(arr, arrr):
+        for n in range(len(arr)-1, 0, -1):
+            for k in range(n):
+                if arr[k] > arr[k+1]:
+                    temp = arr[k]
+                    temp2 = arrr[k]
+                    arr[k] = arr[k+1]
+                    arrr[k] = arrr[k+1]
+                    arr[k+1] = temp
+                    arrr[k+1] = temp2
+
+        return arrr
+    return bubble_sort(timelist, flightlist)
+
+    
+main_flight_function()
+
+
+# In[36]:
+
+
+class info:
+    def __init__(self, flight_num, seat_num, location, cabin):
+        self.flight_num = flight_num
+        self.seat_num = seat_num
+        self.location = location
+        self.cabin = cabin
+        
+    def get_flight_num(self):
+        return self.flight_num
+    def get_avai_seat_num(self):
+        return self.seat_num
+    def get_price(self):
+        return self.price
+    def info(self):
+        return "flight number: ", self.flight_num, "how many available seats?", self.seat_num, "seat close to window: ", self.lo, "seat class: ", self.cab
+    
+
+#flight_list is returned from class flight
+
+
+flightlist = main_flight_function()
+
+info_list = []
+info_list.append(info(flightlist[0], 1, "yes", "economic"))
+info_list.append(info(flightlist[1], 0, "no", "economic"))
+info_list.append(info(flightlist[2], 0, "no", "first"))
+info_list.append(info(flightlist[3], 2, "no", "economic"))
+info_list.append(info(flightlist[4], 0, "no", "economic"))
+info_list.append(info(flightlist[5], 1, "one close one does not", "first"))
+
+#complexity for all_seat: O(n)
+def all_seat():
+    all_seat_list = []
+    for i in range(len(info_list)):
+        all_seat_list.append(info.get_avai_seat_num(info_list[i]))
+    return all_seat_list
+
+#binary search: search whether there is at least one 0 in the all_seat_list
+
+#search function 1: binary search
+#complexity for binary_search: O(log(n))
+def binary_search(arr, ele):
+    seat = []
+    first = 0
+    last = len(arr) - 1
+    found = False
+    while first <= last and not found:
+        mid = int((first+last)/2)
+        if arr[mid] != ele:
+            found = True
+        else:
+            if ele < arr[mid]:
+                last = mid - 1
+            else:
+                first = mid + 1
+                
+    return found
+
+#search function2: Unordered Sequential Search
+#complexity for sequentialSearch: O(n)
+def sequentialSearch(alist, item):
+    pos = 0
+    found = False
+    while pos < len(alist) and not found:
+        if alist[pos] != item:
+            found = True
+        else:
+            pos = pos+1
+    return found
+
+#availability = sequentialSearch(all_seat_list, 0)
+
+all_seat_list = all_seat()
+availability = binary_search(all_seat_list, 0)
+
+final_flight_list = []
+#complexity for final_flightlist: O(n)
+def final_flightlist():
+    if availability == True:
+        for i in range(len(all_seat_list)):
+            if all_seat_list[i] != 0:
+                final_flight_list.append(flightlist[i])
+        return final_flight_list
+    else:
+        return "there is no available seats for all flights"
+final_flightlist()
+
+
+all_flights_num = []
+#complexity for all_flight: O(n)
+def all_flight():
+    for i in range(len(generic_flight)):
+        all_flights_num.append(flights.get_flight_num(generic_flight[i]))
+    return all_flights_num
+
+
+all_flights_num = all_flight()
+#complexity for final_flight_info: O(n^2)    
+def final_flight_info():   
+    for k in range(len(final_flight_list)):
+        for i in range(len(all_flights_num)):
+            if all_flights_num[i] == final_flight_list[k]:
+                print(flights.flight_info(generic_flight[i]))
+final_flight_info()
+
+
+
+
+
+    
+
+
+# In[ ]:
+
+
+
+
